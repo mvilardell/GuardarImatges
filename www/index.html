@@ -1,298 +1,57 @@
-<!DOCTYPE html>
-<head>
-<style>
-	#mapa{
-		width: 400px;
-		height: 400px;
-		float:left;
-		background: green;
-	}
-	#infor{
-		width: 400px;
-		height: 400px;
-		float:left;
-
-	}
-</style>
-<!--ESTILS DE BOOTSTRAP -->
-<link href="css/bootstrap.min.css" rel="stylesheet"/>
-<!-- Carregar GoogleMaps Api V3-->
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-<!--ARXIUS JAVASCRIPT DE BOOTSTRAP -->
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script>
-	//VARIABLES GENERALS
-	//ARRAY PER EMMAGATZEMAR NOUS MARCADORS
-	var marcadors_nous = [];
-	var marcadors_bd = [];
-	var mapa = null;
-	//FUNCIO PER TREURE MARCADORS DEL MAPA
-	function treure_marcadors(llista)
-	{
-		//RECORRE L'ARRAY DE MARCADORS	
-		for(i in llista)
-		{
-			//TREURE MARCADOR DEL MAPA
-			llista[i].setMap(null);
-		}
-	}
-	
-	$(document).on("ready", function(){
-		
-		var formulari = $("#formulari");
-	
-		var defaultPos = new google.maps.LatLng(19.289168,-99.653440);
-				
-		if (navigator.geolocation) {
-		    function exito(pos) {
-				MuestraMapa(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-			}
-			function falla(error) {
-				//si falla mostrar mpara en posicion por defecto
-				alert('Error en servicio Geolocalizador');
-				MuestraMapa(defaultPos); 
-			}
-						
-			//maximumAge- Guarda la posicion por 5 minutos 
-			//enableHighAccuracy: Se tratan de obtener los mejores resultados posible del GPS
-			//timeout: el tiempo maximo que se espera para obtener la posicion en este caso 5 segundos
-			var options = {maximumAge: 500000, enableHighAccuracy:true, timeout: 5000};
-			navigator.geolocation.getCurrentPosition(exito, falla, options );
-		}//FIN IF
-		else {
-            MuestraMapa(defaultPos);  // No soporta geolocalizacion y dibuja el mapa en posicion Default
-        }
-	
-					 
-		//FUNCION DIBUJAR MAPa
-		function MuestraMapa(latlng) {
-
-			var config = {
-            zoom: 16,
-            center: latlng,
-			disableDefaultUI: true,
-            mapTypeId: google.maps.MapTypeId.ROADMAP};
-						
-			mapa = new google.maps.Map(document.getElementById("mapa"), config);
-			
-			//google.maps.event.addListener(mapa, "click", function(event){
-			
-				//MOSTRAR UNA ALERTA AL HACER CLICK AL MAPA
-				//EL EVENTO CLICK EN EL MAPA OFRECE UN PARAMETRO EVENTO
-				//EL CUAL DEVUELVE LAS COORDENADAS DE DONDE SE HIZO CLICK
-				//alert(event.latLng);
-				//COORDENADES
-				var coordenades = String(latlng);//event.latLng.toString();
-				
-				//REMOURE PARENTESIS
-				coordenades = coordenades.replace("(","");
-				coordenades = coordenades.replace(")","");
-				//COORDENADES PER SEPARAT
-				var llista = coordenades.split(",");
-				
-				//VARIABLE PEL MARCADOR
-				var marcador = new google.maps.Marker({
-					position: latlng, //POSICIO DEL NOU MARCADOR
-					animation: google.maps.Animation.DROP, //COM APAREIXERÀ EL MARCADOR
-					draggable:false //NO PERMETRE QUE ES PUGUI ARROSSEGAR EL MARCADOR
-				});
-				
-				//PASSAR LES COORDENADES AL FORMULARI
-				formulari.find("input[name='LongX']").val(llista[1]);
-				formulari.find("input[name='LatY']").val(llista[0]);
-				formulari.find("input[name='Descripcion']").val();
-				//UBICAR EL FOCUS AL CAMP TITOL
-				formulari.find("input[name='Nombre']").focus();
-				
-				
-				//DEIXAR NOMÉS 1 MARCADOR AL MAPA
-				//GUARDAR EL MARCADOR A L'ARRAY
-				marcadors_nous.push(marcador);
-				
-				//AGREGAR EVENT CLICK AL MARCADOR
-				google.maps.event.addListener(marcador, "click", function(){
-					
-				});	
-				
-				//ABANS D'UBICAR EL MARCADOR EN EL MAPA TREURE TOTS ELS DEMES
-				//I AIXÍ DEIXAR-NE NOMÉS UN
-				//treure_marcadors(marcadors_nous);
-				//UBICAR EL MARCADOR EN EL MAPA
-				marcador.setMap(mapa);
-				
-			//});
-		}// Fin muestra mapa
-		
-		$("#guardardatos").click(function() {
-			var fNombre = $("#Nombre").val();
-   			var fDescripcion = $("#Descripcion").val();
-    		var fLatY = $("#LatY").val();
-			var fLongX = $("#LongX").val();
-				
-			$("#Nombre").val(" ");
-    		$("#Descripcion").val(" ");
-    		$("#LatY").val(" ");
-			$("#LongX").val(" ");
-				
-			$.ajax({type: "POST", 
-				url: "http://www.grupllobet.com/apptest/MapsApi/agregar.php",
-                data: ({Nombre: fNombre, Descripcion: fDescripcion, LatY: fLatY, LongX: fLongX}),
-                cache: false,
-                dataType: "text",
-                success: Enviamos
-            });
-				
-		});
-		
-		function Enviamos(data){       
-			alert(data+"Reporte enviado");
-					
-			$.mobile.changePage( window.location.href='index.html');
-		}
-
-		$("#buscardades").click(function llistar() {
-			$.ajax({type: "POST", 
-				url: "http://www.grupllobet.com/apptest/MapsApi/llista.php",
-				dataType: "text",
-				success:function(data){
-					if(data != null)
-					{
-						var dades = data.split("#");
-
-						var i = 0;
-						var n = 1;
-						var d = 2;
-						var y = 3;
-						var x = 4;
-						var f = 5;
-						var h = 6;
-
-						for (;dades[i];) {
-							
-							//OBTENIR LES COORDENADES DEL PUNT
-							var posi = new google.maps.LatLng(dades[y], dades[x]);
-							
-							//CARREGAR LES PROPIETATS AL MARCADOR
-							var marca = new google.maps.Marker({
-								idMarcador:dades[i],
-								position:posi,
-								titol: dades[n]
-							});
-							//alert("..Has fet click a "+marca.idMarcador+" - " +marca.titol );
-							
-							
-							
-							//UBICAR EL MARCADOR AL MAPA
-							marca.setMap(mapa);
-							
-							var infowindow = new google.maps.InfoWindow({
-								position: posi,
-								content: 'ID:'+dades[i]+'</br>Nom:'+dades[n]+'</br>Descripcio:'+dades[d]+'</br>Data:'+dades[f]+'</br>Hora:'+dades[h]
-							});
-						
-							infowindow.open(mapa,marca);
-							
-							//AGREGAR EL MARCADOR A LA VARIABLE MARCADORS_BD
-							marcadors_bd.push(marca);
-							
-							i=i+7;
-							n=n+7;
-							d=d+7;
-							y=y+7;
-							x=x+7;
-							f=f+7;
-							h=h+7;
-						
-						}
-
-					}
-				else
-					{
-						alert("No hi ha dades");
-					}
-				},
-				beforeSend:function(){
-				
-				},
-				complete:function(){
-				
-				}
-			});
-				
-		});
-	});
-
 </script>
 </head>
 <body>
-	<div id="mapa">
-		<h2>Aquí anirà el mapa!</h2>
+	<div id="menu">
+		<button onclick='MostrarFormulari();'>Formulari</button>
+		<script type="text/javascript">
+			function MostrarFormulari(){
+				$('#myDiv').show();
+			}
+		</script>
 	</div>
-	</br></br></br>
-	<div id="infor">
-		<div class="accordion" id="accordion2">
-			<div class="accordion-group">
-				<div class="accordion-heading">
-					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-						<h3>Agregar</h3>
-					</a>
-				</div>
-				<div id="collapseOne" class="accordion-body collapse in">
-					<div class="accordion-inner">
-						<form id="formulari">
-							<table>
-								<tr>
-									<td><label for="Nombre">Nombre:</label></td>
-									<td><input type="text" name="Nombre" id="Nombre" value=""  /></td>
-								</tr>
-								<tr>
-									<td><label for="Descripcion">Descripcion:</label></td>
-									<td><textarea cols="40" rows="8"  name="Descripcion" id="Descripcion" value=""  /></textarea></td>
-								</tr>
-								<tr>
-									<td><label for="LatY">Latitud:</label></td>
-									<td><input type="text" disabled="disabled" name="LatY" id="LatY" value=""  /></td>
-								</tr>
-								<tr>
-									<td><label for="LongX">Longitud:</label></td>
-									<td><input type="text" disabled="disabled" name="LongX" id="LongX" value="" /></td>
-								</tr>
-								<tr>
-									<td><button type="button" data-theme="a" id="guardardatos">Enviar</button></td>
-									<td><button type="button" onclick="window.location.href='index.html'">Cancel·lar</button></td>
-								</tr>
-							</table>
-						</form>
-					</div>
-				</div>
-			</div>
-			</br></br></br>
-			<div class="accordion-group">
-				<div class="accordion-heading">
-					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-						<h3>Buscar</h3>
-					</a>
-				</div>
-				<div id="collapseTwo" class="accordion-body collapse in">
-					<div class="accordion-inner">
-						<button type="button" data-theme="a" id="buscardades">Buscar</button>
-					</div>
-				</div>
-			</div>
-			</br></br></br>
-			<div class="accordion-group">
-				<div class="accordion-heading">
-					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-						<h3>Eliminar</h3>
-					</a>
-				</div>
-				<div id="collapseThree" class="accordion-body collapse in">
-					<div class="accordion-inner">
-						...
-					</div>
-				</div>
-			</div>
+	<div id="mapa">
+
+	</div>
+	<div id='myDiv'>
+		<div id='contingut'>
+			<form enctype="multipart/form-data" id="formulari" method="POST"  action="http://www.grupllobet.com/apptest/marcarpunts2/guardar.php">
+				<table>
+					<tr>
+						<td><label for="Titol">Títol:</label></td>
+						<td><input type="text" name="Titol" id="Titol" value=""  /></td>
+					</tr>
+					<tr>
+						<td><label for="Descripcio">Descripció:</label></td>
+						<td><textarea cols="40" rows="8"  name="Descripcio" id="Descripcio" value=""  /></textarea></td>
+					</tr>
+					<tr>
+						<td><label for="Link">Link:</label></td>
+						<td><input type="text" name="Link" id="Link" value=""  /></td>
+					</tr>
+					<tr>
+						<td><label for="Imatge">Imatge:</label></td>
+						<td><input type="file" name="Imatge" id="Imatge" value=""  /></td>
+					</tr>
+					<tr>
+						<td><input type="hidden" name="LatY" id="LatY" value=""/></td>
+					</tr>
+					<tr>
+						<td><input type="hidden" name="LongX" id="LongX" value=""/><input type="hidden" name="MAX_FILE_SIZE" value="30000" /></td>
+					</tr>
+					<tr>
+						<td><input type="submit" id="guardardades" name="guardardades" value="Enviar"></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div id='contingut2'>
+			<button onclick='theFunction();'>tancar</button>
+						
+			<script type="text/javascript">
+				function theFunction(){
+					document.getElementById('myDiv').style.display = 'none';
+				}
+			</script>
 		</div>
 	</div>	
 </body>
