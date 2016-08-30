@@ -150,19 +150,13 @@
 				marcador.setMap(mapa);
 				
 			});
-			$("#guardardades").click (function(){
-				var fNombre = $("#Nombre").val();
-				var fDescripcion = $("#Descripcion").val();
-				var fLatY = $("#LatY").val();
-				var fLongX = $("#LongX").val();
-				var fURL = $("#URL").val();
-				var fImagen = $("#Imagen").val();
-				
+			$("#formulari").submit(function(e){
+				var data = new FormData(this)
 				$.ajax({type: "POST", 
 					url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
-					data({Nombre: fNombre, Descripcion: fDescripcion, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
-					cache: false,
-					dataType: "text",
+					data: data,
+					processData: false,
+					contentType: fallse,
 					success:function(){
 						location.reload();
 					}
@@ -189,7 +183,7 @@
 	</div>
 	<div id='myDiv'>
 		<div id='contingut'>
-			<form enctype="multipart/form-data" id="formulari" method="POST"  action="http://www.grupllobet.com/apptest/GuardarImatges/guardar.php">
+			<form enctype="multipart/form-data" id="formulari" method="POST">
 				<table>
 					<tr>
 						<td><label for="Nombre">Títol:</label></td>
@@ -214,7 +208,7 @@
 						<td><input type="hidden" name="LongX" id="LongX" value=""/><input type="hidden" name="MAX_FILE_SIZE" value="30000" /></td>
 					</tr>
 					<tr>
-						<td><button type="button" id="guardardades">Enviar</button></td>
+						<td><input type="submit" value="Enviar"></td>
 					</tr>
 				</table>
 			</form>
