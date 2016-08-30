@@ -150,7 +150,7 @@
 				marcador.setMap(mapa);
 				
 			});
-			/*$("#guardardades").click (function(){
+			$("#guardardades").click (function(){
 				var fNombre = $("#Nombre").val();
 				var fDescripcion = $("#Descripcion").val();
 				var fLatY = $("#LatY").val();
@@ -162,12 +162,12 @@
 					url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
 					data({Nombre: fTitol, Descripcion: fDescripcio, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
 					cache: false,
-					dataType: "text",
+					dataType: formData,
 					success:function(){
 						location.reload();
 					}
 				});
-			});*/
+			});
 
 		}// Fin muestra mapa
 		
