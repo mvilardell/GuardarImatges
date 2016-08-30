@@ -150,7 +150,7 @@
 				marcador.setMap(mapa);
 				
 			});
-			$("#guardardades").on("click", function(){
+			$("#guardardades").click (function(){
 				var fNombre = $("#Nombre").val();
 				var fDescripcion = $("#Descripcion").val();
 				var fLatY = $("#LatY").val();
@@ -214,7 +214,7 @@
 						<td><input type="hidden" name="LongX" id="LongX" value=""/><input type="hidden" name="MAX_FILE_SIZE" value="30000" /></td>
 					</tr>
 					<tr>
-						<td><button id="guardardades" name="guardardades">Enviar</button></td>
+						<td><button type="button" id="guardardades">Enviar</button></td>
 					</tr>
 				</table>
 			</form>
