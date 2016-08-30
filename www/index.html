@@ -150,26 +150,27 @@
 				marcador.setMap(mapa);
 				
 			});
+			$("#guardardades").on("click", function(){
+				var fNombre = $("#Nombre").val();
+				var fDescripcion = $("#Descripcion").val();
+				var fLatY = $("#LatY").val();
+				var fLongX = $("#LongX").val();
+				var fURL = $("#URL").val();
+				var fImagen = $("#Imagen").val();
+				
+				$.ajax({type: "POST", 
+					url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
+					data({Nombre: fTitol, Descripcion: fDescripcio, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
+					cache: false,
+					dataType: "text",
+					success:function(){
+						location.reload();
+					}
+				});
+			});
 
 		}// Fin muestra mapa
-		$("#guardardades").on("click", function(){
-			var fNombre = $("#Nombre").val();
-			var fDescripcion = $("#Descripcion").val();
-			var fLatY = $("#LatY").val();
-			var fLongX = $("#LongX").val();
-			var fURL = $("#URL").val();
-			var fImagen = $("#Imagen").val();
-			
-			$.ajax({type: "POST", 
-				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
-				data({Nombre: fTitol, Descripcion: fDescripcio, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
-				cache: false,
-				dataType: "text",
-				success:function(){
-					location.reload();
-				}
-			});
-		});
+		
 	});
 
 </script>
