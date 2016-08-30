@@ -1,3 +1,177 @@
+<!DOCTYPE html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<style>
+	#mapa{
+		width: 100%;
+		height: 97.3%;
+		float:left;
+		bottom: 0px;
+		background: green;
+		position: absolute;
+	}
+	#menu{
+		width:100%;
+		height: 2.7%;
+		top: 0px;
+		background: white;
+	}
+	#myDiv {
+	   position: absolute;
+	   top: 0;
+	   left: 0;
+	   width: 100vw;
+	   height: 100vh;
+	   background-color: rgba(0,0,0,0.6);
+	   z-index: 10;
+	   display: none;
+	}
+	#contingut{
+		background-color: white;
+		width:80%;
+		height:80%;
+		margin: auto;
+		float: center;
+		overflow: scroll;
+	}
+	#contingut2{
+		text-align: center;
+	}
+</style>
+
+<!--ESTILS DE BOOTSTRAP -->
+<link href="css/bootstrap.min.css" rel="stylesheet"/>
+<!-- Carregar GoogleMaps Api V3-->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyBdn8k3YVOhM7U-MGksWFoRWmbOuhaQev0"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<!--ARXIUS JAVASCRIPT DE BOOTSTRAP -->
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script>
+	//VARIABLES GENERALS
+	//ARRAY PER EMMAGATZEMAR NOUS MARCADORS
+	var marcadors_nous = [];
+	var marcadors_bd = [];
+	var mapa = null;
+	//FUNCIO PER TREURE MARCADORS DEL MAPA
+	function treure_marcadors(llista)
+	{
+		//RECORRE L'ARRAY DE MARCADORS	
+		for(i in llista)
+		{
+			//TREURE MARCADOR DEL MAPA
+			llista[i].setMap(null);
+		}
+	}
+	
+	$(document).on("ready", function(){
+		
+		var formulari = $("#formulari");
+	
+		var defaultPos = new google.maps.LatLng(41.76525963171603,1.8741989135742188);
+				
+		if (navigator.geolocation) {
+		    function exito(pos) {
+				MuestraMapa(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+			}
+			function falla(error) {
+				//si falla mostrar mpara en posicion por defecto
+				alert('Error en servicio Geolocalizador');
+				MuestraMapa(defaultPos); 
+			}
+						
+			//maximumAge- Guarda la posicion por 5 minutos 
+			//enableHighAccuracy: Se tratan de obtener los mejores resultados posible del GPS
+			//timeout: el tiempo maximo que se espera para obtener la posicion en este caso 5 segundos
+			var options = {maximumAge: 500000, enableHighAccuracy:true, timeout: 15000};
+			navigator.geolocation.getCurrentPosition(exito, falla, options );
+		}//FIN IF
+		else {
+            MuestraMapa(defaultPos);  // No soporta geolocalizacion y dibuja el mapa en posicion Default
+        }
+	
+					 
+		//FUNCION DIBUJAR MAPa
+		function MuestraMapa(latlng) {
+
+			var config = {
+            zoom: 8,
+            center: latlng,
+			disableDefaultUI: true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP};
+						
+			mapa = new google.maps.Map(document.getElementById("mapa"), config);
+			
+			google.maps.event.addListener(mapa, "click", function(event){
+			
+				//MOSTRAR UNA ALERTA AL HACER CLICK AL MAPA
+				//EL EVENTO CLICK EN EL MAPA OFRECE UN PARAMETRO EVENTO
+				//EL CUAL DEVUELVE LAS COORDENADAS DE DONDE SE HIZO CLICK
+				//alert(event.latLng);
+				//COORDENADES
+			
+				var coordenades = event.latLng.toString();//String(latlng);
+				
+				//REMOURE PARENTESIS
+				coordenades = coordenades.replace("(","");
+				coordenades = coordenades.replace(")","");
+				//COORDENADES PER SEPARAT
+				var llista = coordenades.split(",");
+				
+				var direccio = new google.maps.LatLng(llista[0], llista[1]);
+				
+				//VARIABLE PEL MARCADOR
+				var marcador = new google.maps.Marker({
+					position: direccio, //POSICIO DEL NOU MARCADOR
+					icon:'imatges/man2.png',
+					animation: google.maps.Animation.DROP, //COM APAREIXERÀ EL MARCADOR
+					draggable:false //NO PERMETRE QUE ES PUGUI ARROSSEGAR EL MARCADOR
+				});
+				
+				//PASSAR LES COORDENADES AL FORMULARI
+				formulari.find("input[name='LongX']").val(llista[1]);
+				formulari.find("input[name='LatY']").val(llista[0]);
+				formulari.find("input[name='Descripcio']").val();
+				//UBICAR EL FOCUS AL CAMP TITOL
+				formulari.find("input[name='Titol']").focus();
+				
+				//DEIXAR NOMÉS 1 MARCADOR AL MAPA
+				//GUARDAR EL MARCADOR A L'ARRAY
+				marcadors_nous.push(marcador);
+				
+				//AGREGAR EVENT CLICK AL MARCADOR
+				google.maps.event.addListener(marcador, "click", function(){
+					
+				});	
+				
+				
+				//ABANS D'UBICAR EL MARCADOR EN EL MAPA TREURE TOTS ELS DEMES
+				//I AIXÍ DEIXAR-NE NOMÉS UN
+				treure_marcadors(marcadors_nous);
+				//UBICAR EL MARCADOR EN EL MAPA
+				marcador.setMap(mapa);
+				
+			});
+
+		}// Fin muestra mapa
+		$("#guardardades").on("click", function(){
+			var fTitol = $("#Titol").val();
+			var fDescripcio = $("#Descripcio").val();
+			var fLatY = $("#LatY").val();
+			var fLongX = $("#LongX").val();
+			var fLink = $("#Link").val();
+			var fImatge = $("#Imatge").val();
+			
+			$.ajax({type: "POST", 
+				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
+				data({Nombre: fTitol, Descripcion: fDescripcio, LatY: fLatY, LongX: fLongX, URL: fLink, Imagen: fImatge}),
+				cache: false,
+				dataType: "text",
+				success:function(){
+					location.reload();
+				}
+			});
+		});
+	});
+
 </script>
 </head>
 <body>
@@ -14,7 +188,7 @@
 	</div>
 	<div id='myDiv'>
 		<div id='contingut'>
-			<form enctype="multipart/form-data" id="formulari" method="POST"  action="http://www.grupllobet.com/apptest/marcarpunts2/guardar.php">
+			<form enctype="multipart/form-data" id="formulari" method="POST"  action="http://www.grupllobet.com/apptest/GuardarImatges/guardar.php">
 				<table>
 					<tr>
 						<td><label for="Titol">Títol:</label></td>
@@ -39,7 +213,7 @@
 						<td><input type="hidden" name="LongX" id="LongX" value=""/><input type="hidden" name="MAX_FILE_SIZE" value="30000" /></td>
 					</tr>
 					<tr>
-						<td><input type="submit" id="guardardades" name="guardardades" value="Enviar"></td>
+						<td><button id="guardardades" name="guardardades">Enviar</button></td>
 					</tr>
 				</table>
 			</form>
