@@ -162,6 +162,7 @@
 					url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
 					data({Nombre: fTitol, Descripcion: fDescripcio, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
 					cache: false,
+					dataType: "text",
 					success:function(){
 						location.reload();
 					}
