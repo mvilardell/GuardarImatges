@@ -41,7 +41,7 @@
 <!--ESTILS DE BOOTSTRAP -->
 <link href="css/bootstrap.min.css" rel="stylesheet"/>
 <!-- Carregar GoogleMaps Api V3-->
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyBdn8k3YVOhM7U-MGksWFoRWmbOuhaQev0"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 <!--ARXIUS JAVASCRIPT DE BOOTSTRAP -->
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -152,59 +152,59 @@
 			});
 
 		}// Fin muestra mapa
-		$("#guardardades").on("click", function(){
-			var fTitol = $("#Titol").val();
-			var fDescripcio = $("#Descripcio").val();
+		/*$("#guardardades").on("click", function(){
+			var fNombre = $("#Nombre").val();
+			var fDescripcion = $("#Descripcion").val();
 			var fLatY = $("#LatY").val();
 			var fLongX = $("#LongX").val();
-			var fLink = $("#Link").val();
-			var fImatge = $("#Imatge").val();
+			var fURL = $("#URL").val();
+			var fImagen = $("#Imagen").val();
 			
 			$.ajax({type: "POST", 
 				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
-				data({Nombre: fTitol, Descripcion: fDescripcio, LatY: fLatY, LongX: fLongX, URL: fLink, Imagen: fImatge}),
+				data({Nombre: fTitol, Descripcion: fDescripcio, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
 				cache: false,
 				dataType: "text",
 				success:function(){
 					location.reload();
 				}
 			});
-		});
+		});*/
 	});
 
 </script>
 </head>
 <body>
-	<div id="menu">
+	<!--<div id="menu">
 		<button onclick='MostrarFormulari();'>Formulari</button>
 		<script type="text/javascript">
 			function MostrarFormulari(){
 				$('#myDiv').show();
 			}
 		</script>
-	</div>
+	</div>-->
 	<div id="mapa">
 
 	</div>
-	<div id='myDiv'>
+	<!--<div id='myDiv'>
 		<div id='contingut'>
 			<form enctype="multipart/form-data" id="formulari" method="POST"  action="http://www.grupllobet.com/apptest/GuardarImatges/guardar.php">
 				<table>
 					<tr>
 						<td><label for="Titol">Títol:</label></td>
-						<td><input type="text" name="Titol" id="Titol" value=""  /></td>
+						<td><input type="Nombre" name="Nombre" id="Nombre" value=""  /></td>
 					</tr>
 					<tr>
-						<td><label for="Descripcio">Descripció:</label></td>
-						<td><textarea cols="40" rows="8"  name="Descripcio" id="Descripcio" value=""  /></textarea></td>
+						<td><label for="Descripcion">Descripció:</label></td>
+						<td><textarea cols="40" rows="8"  name="Descripcion" id="Descripcion" value=""  /></textarea></td>
 					</tr>
 					<tr>
-						<td><label for="Link">Link:</label></td>
-						<td><input type="text" name="Link" id="Link" value=""  /></td>
+						<td><label for="URL">Link:</label></td>
+						<td><input type="text" name="URL" id="URL" value=""  /></td>
 					</tr>
 					<tr>
-						<td><label for="Imatge">Imatge:</label></td>
-						<td><input type="file" name="Imatge" id="Imatge" value=""  /></td>
+						<td><label for="Imagen">Imatge:</label></td>
+						<td><input type="file" name="Imagen" id="Imagen" value=""  /></td>
 					</tr>
 					<tr>
 						<td><input type="hidden" name="LatY" id="LatY" value=""/></td>
@@ -227,6 +227,6 @@
 				}
 			</script>
 		</div>
-	</div>	
+	</div>	-->
 </body>
 </html>
