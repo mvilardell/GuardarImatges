@@ -151,7 +151,7 @@
 				
 			});
 			$("#formulari").submit(function(e){
-				var data = new FormData("#formulari");
+				var data = new FormData(this("#formulari"));
 				$.ajax({type: "POST", 
 					url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
 					data: data,
