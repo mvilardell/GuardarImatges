@@ -152,11 +152,18 @@
 			});
 		}// Fin muestra mapa
 		$("#guardar").click(function(){
-			var formData = new FormData($("#formulari")[0]);
+			
+			var fNombre = $("#Nombre").val();
+			var fDescripcion = $("#Descripcion").val();
+			var fLatY = $("#LatY").val();
+			var fLongX = $("#LongX").val();
+			var fURL = $("#URL").val();
+			var fImagen = $("#Imagen").val();
+			
 			alert(formData);
 			$.ajax({type: "POST", 
 				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
-				data: formData,
+				data: ({Nombre: fNombre, Descripcion: fDescripcion, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
 				contentType: false,
 				processData: false,
 				success:function(data){
