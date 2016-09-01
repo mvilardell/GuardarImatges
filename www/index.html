@@ -153,7 +153,7 @@
 		}// Fin muestra mapa
 		$("#guardar").click(function(){
 			var formData = new FormData($("#formulari")[0];
-			alert(formData[0]);
+			alert(formData);
 			$.ajax({type: "POST", 
 				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
 				data: formData,
