@@ -152,7 +152,7 @@
 			});
 		}// Fin muestra mapa
 		$("#guardar").click(function(){
-			var formData = new FormData($("#formulari")[0]);
+			var formData = new FormData(this);
 			alert(formData);
 			$.ajax({type: "POST", 
 				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
