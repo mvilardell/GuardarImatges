@@ -152,7 +152,7 @@
 			});
 		}// Fin muestra mapa
 		$("#guardar").click(function(){
-			var formData = new FormData(this);
+			var formData = new FormData($("#formulari")[0];
 			alert(formData[0]);
 			$.ajax({type: "POST", 
 				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
@@ -209,7 +209,7 @@
 						<td><input type="hidden" name="LongX" id="LongX" value=""/><input type="hidden" name="MAX_FILE_SIZE" value="30000" /></td>
 					</tr>
 					<tr>
-						<td><button id="guardar">Enviar<button></td>
+						<td><button id="guardar" >Enviar<button></td>
 					</tr>
 				</table>
 			</form>
