@@ -160,7 +160,6 @@
 			var fURL = $("#URL").val();
 			var fImagen = $("#Imagen").val();
 			
-			alert(formData);
 			$.ajax({type: "POST", 
 				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
 				data: ({Nombre: fNombre, Descripcion: fDescripcion, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
