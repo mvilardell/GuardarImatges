@@ -122,7 +122,7 @@
 				var marcador = new google.maps.Marker({
 					position: direccio, //POSICIO DEL NOU MARCADOR
 					icon:'imatges/man2.png',
-					animation: google.maps.Animation.DROP, //COM APAREIXER EL MARCADOR
+					animation: google.maps.Animation.DROP, //COM APAREIXERÀ EL MARCADOR
 					draggable:false //NO PERMETRE QUE ES PUGUI ARROSSEGAR EL MARCADOR
 				});
 				
@@ -133,7 +133,7 @@
 				//UBICAR EL FOCUS AL CAMP TITOL
 				formulari.find("input[name='Titol']").focus();
 				
-				//DEIXAR NOMʓ 1 MARCADOR AL MAPA
+				//DEIXAR NOMÉS 1 MARCADOR AL MAPA
 				//GUARDAR EL MARCADOR A L'ARRAY
 				marcadors_nous.push(marcador);
 				
@@ -144,7 +144,7 @@
 				
 				
 				//ABANS D'UBICAR EL MARCADOR EN EL MAPA TREURE TOTS ELS DEMES
-				//I AIX͠DEIXAR-NE NOMʓ UN
+				//I AIXÒ DEIXAR-NE NOMÉS UN
 				treure_marcadors(marcadors_nous);
 				//UBICAR EL MARCADOR EN EL MAPA
 				marcador.setMap(mapa);
@@ -152,13 +152,14 @@
 			});
 		}// Fin muestra mapa
 		$("#formulari").submit(function(e){
-			var data = new FormData(this);
+			var formData = new FormData($("#formulari")[0]);
 			$.ajax({type: "POST", 
 				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
-				data: data,
-				processData: false,
+				data: formData,
 				contentType: false,
+				processData: false,
 				success:function(data){
+					$("#menu").html(data);
 					location.reload();
 				}
 			});
