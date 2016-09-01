@@ -142,7 +142,26 @@
 					
 				});	
 				
-				
+				$("#guardar").click(function(){
+			
+					var fNombre = $("#Nombre").val();
+					var fDescripcion = $("#Descripcion").val();
+					var fLatY = $("#LatY").val();
+					var fLongX = $("#LongX").val();
+					var fURL = $("#URL").val();
+					var fImagen = $("#Imagen").val();
+					
+					$.ajax({type: "POST", 
+						url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
+						data: ({Nombre: fNombre, Descripcion: fDescripcion, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
+						contentType: false,
+						processData: false,
+						success:function(data){
+							alert("success");
+							location.reload();
+						}
+					});
+				});		
 				//ABANS D'UBICAR EL MARCADOR EN EL MAPA TREURE TOTS ELS DEMES
 				//I AIXÒ DEIXAR-NE NOMÉS UN
 				treure_marcadors(marcadors_nous);
@@ -151,27 +170,7 @@
 				
 			});
 		}// Fin muestra mapa
-		$("#guardar").click(function(){
-			
-			var fNombre = $("#Nombre").val();
-			var fDescripcion = $("#Descripcion").val();
-			var fLatY = $("#LatY").val();
-			var fLongX = $("#LongX").val();
-			var fURL = $("#URL").val();
-			var fImagen = $("#Imagen").val();
-			
-			$.ajax({type: "POST", 
-				url: "http://www.grupllobet.com/apptest/GuardarImatges/guardar.php",
-				data: ({Nombre: fNombre, Descripcion: fDescripcion, LatY: fLatY, LongX: fLongX, URL: fURL, Imagen: fImagen}),
-				contentType: false,
-				processData: false,
-				success:function(data){
-					$("#menu").html(data);
-					alert("success");
-					location.reload();
-				}
-			});
-		});		
+		
 	});
 
 </script>
